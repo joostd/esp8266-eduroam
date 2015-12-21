@@ -178,8 +178,10 @@ user_init()
     struct station_config stationConf;
     uint32 free;
 
+    os_printf("SDK version:%s\n", system_get_sdk_version());
+
     //Set station mode
-    wifi_set_opmode( 0x1 );
+    wifi_set_opmode(STATIONAP_MODE); 
 
     //Set ap settings
     os_memcpy(&stationConf.ssid, ssid, 32);
