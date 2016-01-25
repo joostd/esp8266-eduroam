@@ -1,5 +1,5 @@
 # esp8266-eduroam
-eduroam on a esp8622 SoC
+eduroam on a esp8266 SoC
 
 # osx yosemite
 
