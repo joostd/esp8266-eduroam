@@ -23,8 +23,11 @@
     copy: src=ca.pem dest=/etc/freeradius/certs/ca.pem
     notify:
     - restart freeradius
-  - name: copy server certificate and key
+  - name: copy server key
     copy: src=server.key dest=/etc/freeradius/certs/server.key
+    notify:
+    - restart freeradius
+  - name: copy server certificate
     copy: src=server.pem dest=/etc/freeradius/certs/server.pem
     notify:
     - restart freeradius
