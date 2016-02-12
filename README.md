@@ -1,49 +1,67 @@
 # esp8266-eduroam
 eduroam on a esp8266 SoC
 
-# osx yosemite
+# Prerequisites
 
-	sudo hdiutil create ~/Documents/case-sensitive.dmg -volname "case-sensitive" -size 10g -fs "Case-sensitive HFS+"
-	sudo hdiutil mount ~/Documents/case-sensitive.dmg
+Use [esp-open-sdk](https://github.com/pfalcon/esp-open-sdk) toolchain for building firmware.
 
-# prerequisites
+Note: use version 1.5.2 or later of the espressif sdk.
 
-	brew tap homebrew/dupes
-	brew install binutils coreutils automake wget gawk libtool gperf gnu-sed --with-default-names grep
+# build ESP8266 eduroam demo
 
-# build toolchain
 
-	cd /Volumes/case-sensitive/
-	git clone --recursive https://github.com/pfalcon/esp-open-sdk.git
-	cd esp-open-sdk/
-	make STANDALONE=y
-	cd -
+    cd user
+    make
+    
+Use esptool to burn your demo program.
 
-# esptool
+# Setup authentication server
 
-	cd /Volumes/case-sensitive
-	wget https://github.com/igrr/esptool-ck/releases/download/0.4.6/esptool-0.4.6-osx.tar.gz
-	tar xf esptool-0.4.6-osx.tar.gz
-	cp esptool-0.4.6-osx/esptool esp-open-sdk/xtensa-lx106-elf/bin/
-	# export ESPTOOL=/Volumes/case-sensitive/esp-open-sdk/esptool/esptool.py 
+The test environment consists of an Ubuntu VM.
+VirtualBox is used to host the VMs.
+Vagrant is used to automate VM management.
+Ansible is used for provisioning
 
-	export PATH=$PATH:/Volumes/case-sensitive/esp-open-sdk/xtensa-lx106-elf/bin
-	export ESP8266_SDK_ROOT=/Volumes/case-sensitive/esp-open-sdk/esp_iot_sdk_v1.4.0
+To get started, use:
 
-# example
+    vagrant up
+    
+to build the VM, and use:
 
-	cd /Volumes/case-sensitive
-	git clone https://github.com/nkolban/Sample-ESP8266-App.git
-	cd Sample-ESP8266-App/Sample\ ESP8266\ App/
-	make
-	make flash COMPORT=/dev/tty.usbserial-AJ030T8C 
+    vagrant ssh
 
-# example 2
+to logon. In the sequal we assume you are working on the guest VM.
 
-	cd /Volumes/case-sensitive
-	git clone https://github.com/slaff/esp-hello-world.git
-	cd esp-hello-world/
-	make
-	make flash ESPPORT=/dev/tty.usbserial-AJ030T8C 
-	esptool  --port /dev/tty.usbserial-AJ030T8C write_flash 0x00000 firmware/0x00000.bin 0x40000 firmware/0x40000.bin
 
+# debugging
+
+For debugging it is useful to generate additional logging.
+Stop the freeradius daemon and start it in debugging mode:
+
+    sudo invoke-rd.d freeradius stop
+    sudo freeradius -X
+
+A simple test without using EAP:
+
+    radtest john secret 127.0.0.1 100 testing123
+
+This should result in an Access-Accept.
+
+## debugging EAP-TLS
+
+    sh test/eapol_test_install.sh
+    
+You should now have a new binary `/usr/local/bin/eapol_test`.
+
+To debug EAP methods, first copy the server's certificate generated during install, which (because it is self-signed)
+needs to be referenced as a CA certificate.
+
+    cp /etc/freeradius/certs/server.pem /vagrant/server_ca.pem
+    
+To test EAP configuration using PEAP (useful because client certificates are not involved):
+
+    eapol_test -c /vagrant/test/eapol_test.conf.peap -a127.0.0.1 -p1812 -stesting123
+
+To test EAP configuration using TLS:
+
+    eapol_test -c /vagrant/test/eapol_test.conf.tls -a127.0.0.1 -p1812 -stesting123
