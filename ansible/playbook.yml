@@ -1,0 +1,35 @@
+- hosts: default
+  vars:
+    port: 1812
+  #remote_user: root
+  sudo: yes
+
+  tasks:
+  - name: install radius server
+    apt: name={{ item }} update_cache=yes state=latest
+    with_items:
+      - freeradius
+  - name: start radius server
+    service: name=freeradius state=started
+  - name: define clients
+    copy: src=clients.conf dest=/etc/freeradius/clients.conf
+    notify:
+    - restart freeradius
+  - name: define users
+    lineinfile: dest=/etc/freeradius/users line="john Cleartext-Password := \"secret\""
+    notify:
+    - restart freeradius
+  - name: copy supplicant ca certificate
+    copy: src=ca.pem dest=/etc/freeradius/certs/ca.pem
+    notify:
+    - restart freeradius
+  - name: copy server certificate and key
+    copy: src=server.key dest=/etc/freeradius/certs/server.key
+    copy: src=server.pem dest=/etc/freeradius/certs/server.pem
+    notify:
+    - restart freeradius
+
+  handlers:
+  - name: restart freeradius
+    command: service freeradius restart
+
