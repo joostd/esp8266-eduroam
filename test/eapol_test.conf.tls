@@ -1,0 +1,10 @@
+network={
+	eap=TLS
+	eapol_flags=0
+	key_mgmt=IEEE8021X
+	identity="john"
+	ca_cert="../ansible/ca.pem"
+	client_cert="/vagrant/x509/testuser_cert.pem"
+	private_key="/vagrant/x509/testuser_key.pem"
+	private_key_passwd="whatever"
+}

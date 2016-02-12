@@ -1,0 +1,10 @@
+#!/bin/sh
+
+/usr/bin/radeapclient -x 127.0.0.1 auth testing123 << EOF
+User-Name = "john"
+Cleartext-Password = "secret"
+EAP-Code = Response
+EAP-Id = 210
+EAP-Type-Identity = "john"
+Message-Authenticator = 0x00
+EOF

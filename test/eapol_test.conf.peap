@@ -1,0 +1,10 @@
+network={
+	eap=PEAP
+	eapol_flags=0
+	key_mgmt=IEEE8021X
+	identity="john"
+	password="secret"
+	ca_cert="../ansible/ca.pem"
+	phase2="auth=MSCHAPV2"
+	anonymous_identity="anonymous"
+}
