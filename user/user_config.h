@@ -1,2 +1,2 @@
-#define SSID "eduroam"
+#define SSID "homeroam"
 #define SSID_PASSWORD ""
