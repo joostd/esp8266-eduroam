@@ -15,6 +15,10 @@
     copy: src=clients.conf dest=/etc/freeradius/clients.conf
     notify:
     - restart freeradius
+  - name: define eap types
+    copy: src=eap.conf dest=/etc/freeradius/eap.conf
+    notify:
+    - restart freeradius
   - name: define users
     lineinfile: dest=/etc/freeradius/users line="john Cleartext-Password := \"secret\""
     notify:
