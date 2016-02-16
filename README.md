@@ -9,11 +9,12 @@ Note: use version 1.5.2 or later of the espressif sdk.
 
 # build ESP8266 eduroam demo
 
-
     cd user
     make
     
-Use esptool to burn your demo program.
+Use esptool to burn your demo program:
+
+    make flash
 
 # Setup authentication server
 
@@ -30,7 +31,7 @@ to build the VM, and use:
 
     vagrant ssh
 
-to logon. In the sequal we assume you are working on the guest VM.
+to logon. In the sequel we assume you are working on the guest VM.
 
 
 # debugging
@@ -52,11 +53,6 @@ This should result in an Access-Accept.
     sh test/eapol_test_install.sh
     
 You should now have a new binary `/usr/local/bin/eapol_test`.
-
-To debug EAP methods, first copy the server's certificate generated during install, which (because it is self-signed)
-needs to be referenced as a CA certificate.
-
-    cp /etc/freeradius/certs/server.pem /vagrant/server_ca.pem
     
 To test EAP configuration using PEAP (useful because client certificates are not involved):
 
@@ -65,3 +61,12 @@ To test EAP configuration using PEAP (useful because client certificates are not
 To test EAP configuration using TLS:
 
     eapol_test -c /vagrant/test/eapol_test.conf.tls -a127.0.0.1 -p1812 -stesting123
+    
+# Certificates
+
+Client and server certificates for testing are included in the `x509` directory. Both certificates are issued by a demo Certification Authority. You can renew certificates using the `Makefile` in that directory, or replace certificates and keys with your own (in which case you should also replace the CA certificate known to the server). 
+
+# Open issues
+
+- Be careful storing production keys on your esp8266. It is probably quite easy for others to retrieve these keys when you loose your esp.
+- I do not know of any way to verify the server certificate against the CA certificate. This means your WiFi client is prone to a man-in-the-middle attack.
