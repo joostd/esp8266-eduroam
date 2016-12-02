@@ -2,7 +2,7 @@
   vars:
     port: 1812
   #remote_user: root
-  sudo: yes
+  become: true
 
   tasks:
   - name: install radius server
