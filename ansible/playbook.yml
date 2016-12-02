@@ -1,7 +1,6 @@
 - hosts: default
   vars:
     port: 1812
-  #remote_user: root
   become: true
 
   tasks:
@@ -38,5 +37,4 @@
 
   handlers:
   - name: restart freeradius
-    command: service freeradius restart
-
+    service: name=freeradius state=restarted
