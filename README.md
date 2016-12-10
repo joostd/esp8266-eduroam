@@ -5,7 +5,14 @@ eduroam on a esp8266 SoC
 
 Use [esp-open-sdk](https://github.com/pfalcon/esp-open-sdk) toolchain for building firmware.
 
-Note: use version 1.5.2 or later of the espressif sdk.
+Notes:
+
+- use version 1.5.2 or later of the espressif sdk for EAP-TLS support.
+- use version 2.0.0 or later of the espressif sdk for PEAP or EAP-TTLS support.
+
+PEAP still has issues that need to be resolved:
+- the EAP outer identity seems fixed to `anonymous@espressif.com`.
+- MS-Chapv2 authentication fails for some reason.
 
 # build ESP8266 eduroam demo
 
