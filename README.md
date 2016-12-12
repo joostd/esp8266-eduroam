@@ -76,4 +76,4 @@ Client and server certificates for testing are included in the `x509` directory.
 # Open issues
 
 - Be careful storing production keys on your esp8266. It is probably quite easy for others to retrieve these keys when you loose your esp.
-- I do not know of any way to verify the server certificate against the CA certificate. This means your WiFi client is prone to a man-in-the-middle attack.
+- I do not know of any way to verify the server certificate against the CA certificate when using SDK version 1.5.x. This means your WiFi client is prone to a man-in-the-middle attack. Use version 2.x of the SDK to verify the CA certificate on the client.
