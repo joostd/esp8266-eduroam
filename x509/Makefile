@@ -1,4 +1,4 @@
-all: demoCA demoCA/cacert.pem testuser_cert.pem server_cert.pem testuser_key.c testuser_cert.c
+all: demoCA demoCA/cacert.pem testuser_cert.pem server_cert.pem testuser_key.c testuser_cert.c ca.h
 
 # Certification Authority
 
@@ -48,6 +48,14 @@ testuser_key.c: testuser_key.pem
 	xxd -i testuser_key.pem > testuser_key.c
 testuser_cert.c: testuser_cert.pem
 	xxd -i testuser_cert.pem > testuser_cert.c
+
+# C version of ca cert
+
+ca.pem: demoCA/cacert.pem
+	openssl x509 -in demoCA/cacert.pem -out ca.pem
+
+ca.h: ca.pem
+	xxd -i ca.pem > ca.h
 #
 
 clean:
